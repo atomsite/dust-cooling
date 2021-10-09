@@ -1,10 +1,10 @@
 // Constants and conversion ratios
-static KBOLTZ: f64  = 1.380658e-16;
-static AMU: f64     = 1.660539e-24;
-static EVTOERG: f64 = 1.602000e-12;
-static MASSH: f64   = 1.00784 * AMU;
-static MASSE: f64   = 0.00054858 * AMU;
-static HERATIO: f64 = MASSE/MASSH;
+const KBOLTZ: f64  = 1.380658e-16;
+const AMU: f64     = 1.660539e-24;
+const EVTOERG: f64 = 1.602000e-12;
+const MASSH: f64   = 1.00784 * AMU;
+const MASSE: f64   = 0.00054858 * AMU;
+const HERATIO: f64 = MASSE/MASSH;
 
 fn calc_h_coll(t: f64, a: f64, n_h: f64)->f64 {
     let kt     = KBOLTZ * t;
