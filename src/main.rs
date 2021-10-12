@@ -1,3 +1,7 @@
+#[macro_use] extern crate prettytable;
+use std::fs::File;
+use prettytable::Table;
+
 // Constants and conversion ratios
 const KBOLTZ: f64  = 1.380658e-16;
 const AMU: f64     = 1.660539e-24;
@@ -78,21 +82,28 @@ fn main() {
     let ntmax   = 201;
     let dlogt   = (logtmax - logtmin) / ((ntmax - 1) as f64);
     // Initialise temperature range array
-    let mut t_arr = vec![0.0;ntmax];
+    let mut t_arr = Vec::new();
     // Calculate T
     for n in 0..ntmax {
         let nf    = n as f64;
         let log_t = logtmin + (nf * dlogt);
-        t_arr[n]  = f64::powf(10.0,log_t);
+        t_arr.push(f64::powf(10.0,log_t));
     }
-    // Calculate lambda
-    let mut lambda_arr = Vec::new();
+    // Create table
+    let mut table = Table::new();
+    // Add header
+    table.set_titles(row!["T (K)","Lambda(T)","H_Coll","H_el"]);
     // Process temperature bins
     for t in t_arr {
         let h_coll = calc_h_coll(t,a,n_h);
         let h_el   = calc_h_el(t,a,n_e);
         let lambda = (h_coll + h_el)/ n_h;
         // Add to array containing values for lambda
-        lambda_arr.push(lambda);
+        table.add_row(row![format!("{:.4e}",t),
+                           format!("{:.4e}",lambda),
+                           format!("{:.4e}",h_el),
+                           format!("{:.4e}",h_coll)]);
     }
+    let out = File::create("output.csv").unwrap();
+    table.to_csv(out).unwrap();
 }
